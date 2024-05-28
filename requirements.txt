@@ -1,0 +1,4 @@
+beanie  # mongodb orm
+pandas  # data manipulation
+fastapi # api
+boto3   # s3

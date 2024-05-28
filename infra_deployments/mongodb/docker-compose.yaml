@@ -3,15 +3,15 @@ services:
   myapplication:
     image: mongodb/mongodb-community-server:6.0-ubi8
     environment:
-      - CONN_STR=mongodb://user:pass@mongodb
+      - CONN_STR=mongodb://root:24022002@mongodb
     command: '/bin/bash -c "sleep 5; mongosh $$CONN_STR --eval \"show dbs;\""'
     depends_on:
       - mongodb
   mongodb:
     image: mongodb/mongodb-community-server:6.0-ubi8
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=pass
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=24022002
     volumes:
       - type: bind
         source: ./data

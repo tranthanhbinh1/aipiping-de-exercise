@@ -1,18 +1,15 @@
-version: '1'
+version: '1.0'
 services:
-  myapplication:
-    image: mongodb/mongodb-community-server:6.0-ubi8
-    environment:
-      - CONN_STR=mongodb://root:24022002@mongodb
-    command: '/bin/bash -c "sleep 5; mongosh $$CONN_STR --eval \"show dbs;\""'
-    depends_on:
-      - mongodb
   mongodb:
-    image: mongodb/mongodb-community-server:6.0-ubi8
+    image: mongo:latest
+    container_name: mongodb_container
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=24022002
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    command:
+      - '--logpath'
+      - '/var/log/mongodb/mongod.log'
+    ports:
+      - 27017:27017
     volumes:
-      - type: bind
-        source: ./data
-        target: /data/db
+      - ./docker/mongodb_data:/data/db

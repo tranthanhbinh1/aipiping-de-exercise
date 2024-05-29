@@ -4,3 +4,4 @@ fastapi # api
 boto3   # s3
 requests # http requests
 pytest  # testing
+moto # testing, for mocking s3

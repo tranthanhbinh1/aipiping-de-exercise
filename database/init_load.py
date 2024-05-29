@@ -1,5 +1,6 @@
-from dotenv import load_dotenv
+import asyncio
 from beanie import init_beanie
+from dotenv import load_dotenv
 from .models.leads import Lead
 from motor.motor_asyncio import AsyncIOMotorClient
 from configs import MONGO_URI

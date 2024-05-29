@@ -161,3 +161,4 @@ cython_debug/
 
 # Docker mongodb data
 /infra_deployments/mongodb/docker/mongodb_data
+test.ipynb

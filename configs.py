@@ -6,7 +6,7 @@ load_dotenv(override=True)
 class MongoConfig:
     MONGO_USER = os.environ["MONGO_USER"]
     MONGO_PASSWORD = os.environ["MONGO_PASSWORD"]
-    MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@localhost:27017/admin"
+    MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@localhost:27017"
 
 
 class S3Config:

@@ -1,5 +1,6 @@
 import requests
 import logging
+from typing import Optional
 from database import s3_connector
 from utils.logging_config import setup_logging  
 
@@ -9,7 +10,7 @@ class ELT:
     def __init__(self) -> None:
         self.s3_connector = s3_connector.S3Connector()
         self.linkedin_api = "http://127.0.0.1:8000/get_linkedin_data/abc@gmail.com"
-        self.data: dict = None
+        self.data: Optional[dict] = None
         
     def extract(self) -> dict:
         try:
@@ -24,7 +25,7 @@ class ELT:
         
         pass
     
-    def transform(self, data: dict) -> dict:
+    def transform(self, data: dict) -> Optional[dict]:
         pass
     
     

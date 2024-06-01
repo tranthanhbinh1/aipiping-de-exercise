@@ -18,7 +18,7 @@ async def init_load():
     lead = Lead(first_name="Mike", last_name="Doe", email="abc@gmail.com")
     await lead.insert()
 
-    data = ELT().extract()
+    data = ELT.extract()
 
     linkedin = Linkedin(
         credits_left=data["credits_left"],

@@ -4,7 +4,7 @@ from utils.logging_config import setup_logging
 from .mongodb_connector import init
 from .models.lead import Lead
 from .models.linkedin_data import Linkedin
-from pipelines.pipe_2 import ELT
+from data_pipeline.elt_process import ELT
 from configs import MONGODB_DB_NAME
 
 setup_logging()

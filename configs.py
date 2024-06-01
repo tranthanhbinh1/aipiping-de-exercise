@@ -3,11 +3,13 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
+LINKEDIN_BUCKET = "linkedin-data"
+MONGODB_DB_NAME = "prospects"
+
 class MongoConfig:
     MONGO_USER = os.environ["MONGO_USER"]
     MONGO_PASSWORD = os.environ["MONGO_PASSWORD"]
     MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@localhost:27017"
-
 
 class S3Config:
     S3_ACCESS_KEY = os.environ["S3_ACCESS_KEY"]

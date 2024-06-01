@@ -11,3 +11,6 @@ class Lead(Document):
     last_name: Optional[str] = None
     email: Optional[str] = None
     photo_url: Optional[str] = None
+    
+    class Settings:
+        name = "leads"

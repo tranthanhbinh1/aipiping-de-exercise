@@ -1,13 +1,37 @@
 import asyncio
-from mongodb_connector import init
-from beanie import init_beanie, Document, View
+import logging
+from utils.logging_config import setup_logging
+from .mongodb_connector import init
 from .models.lead import Lead
 from .models.linkedin_data import Linkedin
-# from motor.motor_asyncio import AsyncIOMotorClient
-# from configs import MongoConfig
+from pipelines.pipe_2 import ELT
+from configs import MONGODB_DB_NAME
+
+setup_logging()
+
+
+async def init_load():
+    await init(database=MONGODB_DB_NAME, document_models=[Lead, Linkedin])
+    logging.info("Successfully initilized database!")
+
+    # Test insert
+    lead = Lead(first_name="Mike", last_name="Doe", email="abc@gmail.com")
+    await lead.insert()
+
+    data = ELT().extract()
+
+    linkedin = Linkedin(
+        credits_left=data["credits_left"],
+        person=data["person"],
+        rate_limit_left=data["rate_limit_left"],
+        success=data["success"],
+    )
+    
+    await linkedin.insert()
 
 
 if __name__ == "__main__":
-    asyncio.run(init(database="prospects", document_models=[Lead, Linkedin]))
+    asyncio.run(init_load())
     
-#TODO: 1 database for both Lead and Linkedin data or 1 for Lead and 1 for Linkedin data?
+    logging.info("Successfullly initialized load!")
+

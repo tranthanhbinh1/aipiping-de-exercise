@@ -10,3 +10,6 @@ class Linkedin(Document):
     person: Optional[dict]  = None
     rate_limit_left: Optional[int] = None
     success: Optional[bool] = None
+    
+    class Settings:
+        name = "linkedin_raw_data"

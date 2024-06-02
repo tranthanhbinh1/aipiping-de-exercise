@@ -12,6 +12,19 @@ setup_logging()
 
 
 class PersonaMapper:
+    """
+    A class that maps personas to LinkedIn profiles.
+
+    Attributes:
+        academic_df (pd.DataFrame): A DataFrame containing academic data.
+
+    Methods:
+        create: A class method that creates an instance of PersonaMapper.
+        init: An asynchronous method that initializes the PersonaMapper instance.
+        query_linkedin_id: An asynchronous method that queries the LinkedIn ID for a given lead ID.
+        query_persona_features: An asynchronous method that queries the persona features for a given LinkedIn ID.
+    """
+
     academic_df: pd.DataFrame = pd.read_csv("test_data/fields_data_transformed.csv")
 
     @classmethod
@@ -24,6 +37,15 @@ class PersonaMapper:
         await init(database="prospects", document_models=[Lead, Linkedin])
 
     async def query_linkedin_id(self, lead_id: str) -> str | None:
+        """
+        Queries the LinkedIn ID for a given lead ID.
+
+        Args:
+            lead_id (str): The ID of the lead.
+
+        Returns:
+            str | None: The LinkedIn ID of the lead if found, None otherwise.
+        """
         lead_result = await Lead.find_one(Lead.id == lead_id)
         if lead_result:
             logging.info("Lead result: %s", lead_result)
@@ -33,6 +55,15 @@ class PersonaMapper:
             return None
 
     async def query_persona_features(self, linkedin_id: str) -> dict | None:
+        """
+        Queries the persona features for a given LinkedIn ID.
+        Right now, the persona features contains the company size and the field of study.
+
+        Args:
+            linkedin_id (str): The LinkedIn ID of the lead.
+        Returns:
+            dict | None: The persona features of the lead if found, None otherwise.
+        """
         logging.info(f"Querying for linkedin identifier:{linkedin_id}")
         persona_features = (
             await Linkedin.find({"person.linkedInIdentifier": f"{linkedin_id}"})
@@ -76,3 +107,5 @@ if __name__ == "__main__":
             await persona_mapper.query_persona_features(linkedin_id)
 
     asyncio.run(main())
+
+#TODO: MAke the actual mapping, map the field of study and the company size

@@ -43,7 +43,8 @@ class ELT:
         self.s3_connector = S3Connector()
         self.mongodb_conn = None
         self.linkedin_api: str = (
-            self.default_linkedin_api.format(email=self.email) or self.default_linkedin_api
+            self.default_linkedin_api.format(email=self.email)
+            or self.default_linkedin_api
         )
         self.doc: Optional[Document] = None
         self.data: Optional[dict] = self.extract()
@@ -119,6 +120,7 @@ class ELT:
         if result:
             logging.info(f"Found and Transformed {len(result)} documents")
             self.doc = Lead(
+                linkedin_id=result[0].linkedin_id,
                 status=result[0].status,
                 first_name=result[0].first_name,
                 last_name=result[0].last_name,

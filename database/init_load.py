@@ -15,9 +15,9 @@ async def init_load():
     await init(database=MONGODB_DB_NAME, document_models=[Lead, Linkedin, Persona])
     logging.info("Initialized database connections!")
 
-    # Test insert
-    lead = Lead(first_name="Mike", last_name="Doe", email="abc@gmail.com")
-    await lead.insert()
+    # # Test insert
+    # lead = Lead(first_name="Mike", last_name="Doe", email="abc@gmail.com")
+    # await lead.insert()
 
     try:
         data = ELT().extract()
@@ -28,6 +28,7 @@ async def init_load():
     linkedin = Linkedin(
         credits_left=data["credits_left"],
         person=data["person"],
+        company=data["company"],
         rate_limit_left=data["rate_limit_left"],
         success=data["success"],
     )

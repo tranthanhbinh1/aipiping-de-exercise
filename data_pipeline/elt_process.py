@@ -38,15 +38,16 @@ class ELT:
 
     default_linkedin_api = "http://127.0.0.1:8000/get_linkedin_data/{email}"
 
-    def __init__(self, email: str) -> None:
+    def __init__(self, email: Optional[str] = None) -> None:
         self.email = email
         self.s3_connector = S3Connector()
-        self.data: Optional[dict] = self.extract()
         self.mongodb_conn = None
-        self.linkedin_api: str = self.default_linkedin_api.format(email=self.email)
+        self.linkedin_api: str = (
+            self.default_linkedin_api.format(email=self.email) or self.default_linkedin_api
+        )
         self.doc: Optional[Document] = None
+        self.data: Optional[dict] = self.extract()
 
-    # @classmethod
     def extract(self) -> dict:
         """
         Extracts data from LinkedIn API.

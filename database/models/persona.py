@@ -9,7 +9,7 @@ class Persona(Document):
     name: Optional[str] = None
     academic_field: Optional[str] = None
     company_type: Optional[
-        Literal["startup", "mid_market", "multi_national_company"]
+        Literal["startup", "mid_market", "multi_national"]
     ] = None
     
     class Settings:

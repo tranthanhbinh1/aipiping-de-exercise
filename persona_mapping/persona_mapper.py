@@ -1,7 +1,7 @@
 import pandas as pd
 import logging
 import asyncio
-from typing import Optional
+from typing import Literal
 from database.mongodb_connector import init
 from database.models.persona import Persona
 from database.models.linkedin_data import Linkedin
@@ -34,7 +34,7 @@ class PersonaMapper:
         return self
 
     async def init(self):
-        await init(database="prospects", document_models=[Lead, Linkedin])
+        await init(database="prospects", document_models=[Lead, Linkedin, Persona])
 
     async def query_linkedin_id(self, lead_id: str) -> str | None:
         """
@@ -94,6 +94,65 @@ class PersonaMapper:
             logging.error("No linkedin data found!")
             return None
 
+    @staticmethod
+    def company_mapper(
+        company_size: int,
+    ) -> Literal["startup", "mid_market", "multi_national"]:
+        """
+        Maps the company size to a company category.
+
+        Args:
+            company_size (int): The size of the company.
+
+        Returns:
+            str: The category of the company.
+        """
+        if company_size < 50:
+            return "startup"
+        elif 50 < company_size < 1000:
+            return "mid_market"
+        else:
+            return "multi_national"
+
+    @classmethod
+    def fied_of_study_mapper(cls, field_of_study: str) -> str:
+        """
+        Maps the field of study to a field category.
+
+        Args:
+            field_of_study (str): The field of study.
+
+        Returns:
+            str: The category of the field of study.
+        """
+        field_of_study = field_of_study.lower()
+        for index, row in cls.academic_df.iterrows():
+            if field_of_study in row["field_of_study"].lower():
+                return row["academic_field"]
+        return "Other"
+
+    async def insert_persona(
+        self,
+        company_type: Literal["startup", "mid_market", "multi_national"],
+        academic_field: str,
+    ) -> None:
+        """
+        Inserts the persona features into the database.
+
+        Args:
+            linkedin_id (str): The LinkedIn ID of the lead.
+            persona_features (dict): The persona features of the lead.
+
+        Returns:
+            None
+        """
+        persona = Persona(
+            company_type=company_type,
+            academic_field=academic_field,
+        )
+        await persona.insert()
+        logging.info("Persona inserted successfully!")
+
 
 if __name__ == "__main__":
 
@@ -104,8 +163,19 @@ if __name__ == "__main__":
         )
         logging.info("Linkedin_id: %s", linkedin_id)
         if linkedin_id:
-            await persona_mapper.query_persona_features(linkedin_id)
+            persona_features = await persona_mapper.query_persona_features(linkedin_id)
+        if persona_features:
+            company_type = persona_mapper.company_mapper(
+                persona_features["company_size"]
+            )
+            logging.info("Company type: %s", company_type)
+            academic_field = persona_mapper.fied_of_study_mapper(
+                persona_features["field_of_study"]
+            )
+            logging.info("Academic field: %s", academic_field)
+
+            await persona_mapper.insert_persona(company_type, academic_field)
 
     asyncio.run(main())
 
-#TODO: MAke the actual mapping, map the field of study and the company size
+# TODO: MAke the actual mapping, map the field of study and the company size

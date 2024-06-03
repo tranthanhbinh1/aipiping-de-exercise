@@ -13,6 +13,17 @@ async def init(
     database: str,
     document_models: Optional[List[Union[Type[Document], Type["View"], str]]],
 ) -> None:
+    """
+    Initialize the MongoDB connection and Beanie ORM.
+
+    Args:
+        database (str): The name of the database to connect to.
+        document_models (Optional[List[Union[Type[Document], Type["View"], str]]]):
+            A list of document models to be registered with Beanie.
+
+    Returns:
+        None
+    """
     # Create Motor client
     client = AsyncIOMotorClient(MongoConfig.MONGO_URI)
 

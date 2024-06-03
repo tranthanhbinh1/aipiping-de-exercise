@@ -5,3 +5,4 @@ boto3   # s3
 requests # http requests
 pytest  # testing
 moto # testing, for mocking s3
+pytest-asyncio == 0.23.7

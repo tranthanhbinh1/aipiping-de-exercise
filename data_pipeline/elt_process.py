@@ -49,6 +49,15 @@ class ELT:
         self.doc: Optional[Document] = None
         self.data: Optional[dict] = self.extract()
 
+    @classmethod
+    async def create(cls, email: Optional[str] = None):
+        self = ELT(email=email)
+        await self.init()
+        return self
+
+    async def init(self):
+        await init(database=MONGODB_DB_NAME, document_models=[Linkedin, Lead])
+
     def extract(self) -> dict:
         """
         Extracts data from LinkedIn API.
@@ -145,14 +154,20 @@ class ELT:
         else:
             logging.info("No data")
 
-    def main(self) -> None:
-        self.extract()
-        self.load_s3()
-        asyncio.run(self.async_load_mongo_raw())
-        asyncio.run(self.transform())
-        asyncio.run(self.load_mongo_transformed())
+    async def main(self) -> None:
+        """
+        Main method for the ELT process.
+
+        This method orchestrates the Extract, Load, and Transform process.
+
+        Returns:
+            None
+        """
+        await self.async_load_mongo_raw()
+        await self.transform()
+        await self.load_mongo_transformed()
 
 
 if __name__ == "__main__":
-    elt = ELT(email="abc@gmail.com")
-    elt.main()
+    asyncio.run(ELT().main())
+    logging.info("Successfully completed the ELT process!")

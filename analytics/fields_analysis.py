@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import logging
-from typing import Optional
 from utils.logging_config import setup_logging
 
 setup_logging()

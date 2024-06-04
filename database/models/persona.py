@@ -11,6 +11,7 @@ class Persona(Document):
     company_type: Optional[
         Literal["startup", "mid_market", "multi_national"]
     ] = None
+    lead_ids: Optional[list[str]] = None
     
     class Settings:
         name = "personas"

@@ -133,6 +133,7 @@ class PersonaMapper:
 
     async def insert_persona(
         self,
+        lead_id: str,
         company_type: Literal["startup", "mid_market", "multi_national"],
         academic_field: str,
     ) -> None:
@@ -140,7 +141,7 @@ class PersonaMapper:
         Inserts the persona features into the database.
 
         Args:
-            linkedin_id (str): The LinkedIn ID of the lead.
+            lead_id (str): The ID of the lead.
             persona_features (dict): The persona features of the lead.
 
         Returns:
@@ -149,6 +150,7 @@ class PersonaMapper:
         persona = Persona(
             company_type=company_type,
             academic_field=academic_field,
+            lead_ids=[lead_id],
         )
         await persona.insert()
         logging.info("Persona inserted successfully!")
@@ -156,11 +158,9 @@ class PersonaMapper:
 
 if __name__ == "__main__":
 
-    async def main():
+    async def main(lead_id: str):
         persona_mapper = await PersonaMapper.create()
-        linkedin_id = await persona_mapper.query_linkedin_id(
-            "dd4483e4748c4277b1f989358dc51408"
-        )
+        linkedin_id = await persona_mapper.query_linkedin_id(lead_id)
         logging.info("Linkedin_id: %s", linkedin_id)
         if linkedin_id:
             persona_features = await persona_mapper.query_persona_features(linkedin_id)
@@ -174,8 +174,7 @@ if __name__ == "__main__":
             )
             logging.info("Academic field: %s", academic_field)
 
-            await persona_mapper.insert_persona(company_type, academic_field)
+            await persona_mapper.insert_persona(lead_id, company_type, academic_field)
 
-    asyncio.run(main())
+    asyncio.run(main(lead_id="dd4483e4748c4277b1f989358dc51408"))
 
-# TODO: MAke the actual mapping, map the field of study and the company size
